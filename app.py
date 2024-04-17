@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template 
 import base64
 import os
 from werkzeug.utils import secure_filename
@@ -14,8 +14,8 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def index():
-    return '<form method="post" action="/upload" enctype="multipart/form-data"><input type="file" name="file"><input type="submit"></form>'
-
+    return render_template('upload_files.html') 
+    
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -50,7 +50,7 @@ def upload_file():
         
 
         session = requests.Session()
-        retries = Retry(total=5,
+        retries = Retry(total=1,
                         backoff_factor=0.1,
                         status_forcelist=[500, 502, 503, 504])
 
@@ -66,4 +66,4 @@ def upload_file():
     return 'File successfully uploaded but no image data was sent to the API.'
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
